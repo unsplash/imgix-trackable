@@ -13,7 +13,7 @@ const findTrackingParamsInUrl = (url) => {
 	}
 };
 
-const dasherize = (str) => {
+const sanitize = (str) => {
 	if (!str) { return ''; }
 
 	return str.trim()
@@ -22,7 +22,7 @@ const dasherize = (str) => {
 };
 
 const encodeTrackingOptions = (...args) => {
-	return base64.encode(args.map(dasherize).join(';') + ';');
+	return base64.encode(args.map(sanitize).join(';') + ';');
 };
 
 const buildTrackingObject = ({ url, app, page, label, property }) => {
