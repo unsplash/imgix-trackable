@@ -20,7 +20,7 @@
     "publish:minor": "npm run prepublish && npm version minor",
     "publish:patch": "npm run prepublish && npm version patch"
   },
-  "files": [
+  "main": [
     "lib/index.js"
   ],
   "keywords": [
