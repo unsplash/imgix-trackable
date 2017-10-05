@@ -13,8 +13,16 @@ const findTrackingParamsInUrl = (url) => {
 	}
 };
 
+const dasherize = (str) => {
+	if (!str) { return ''; }
+
+	return str.trim()
+    .replace(/[-_\s]+/g, '-')
+    .toLowerCase();
+};
+
 const encodeTrackingOptions = (...args) => {
-	return base64.encode(args.join(';') + ';');
+	return base64.encode(args.map(dasherize).join(';') + ';');
 };
 
 const buildTrackingObject = ({ url, app, page, label, property }) => {

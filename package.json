@@ -13,7 +13,7 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "jasmine",
+    "test": "npm run build && jasmine",
     "build": "babel src -d lib"
   },
   "files": [

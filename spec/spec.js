@@ -61,7 +61,47 @@ describe("imgix-trackable", function() {
       const encodedValues = trackedUrl.split('ixid=')[1];
       const decodedValues = base64.decode(encodedValues);
 
-      expect(decodedValues).toEqual(`${app};${page};${label};${property};`);
+      expect(decodedValues).toEqual(`my-app;search;dog;5;`);
+    });
+
+    it("dasherizes the tracking options", () => {
+      const baseUrl = 'https://images.unsplash.com/photo-123';
+      const app = 'my app';
+      const page = 'search';
+      const label = 'new york';
+      const property = '5';
+
+      const trackedUrl = track(baseUrl, {
+        app,
+        page,
+        label,
+        property
+      });
+
+      const encodedValues = trackedUrl.split('ixid=')[1];
+      const decodedValues = base64.decode(encodedValues);
+
+      expect(decodedValues).toEqual(`my-app;search;new-york;5;`);
+    });
+
+    it("lowercases the tracking options", () => {
+      const baseUrl = 'https://images.unsplash.com/photo-123';
+      const app = 'MY App';
+      const page = 'search';
+      const label = 'Dog';
+      const property = '5';
+
+      const trackedUrl = track(baseUrl, {
+        app,
+        page,
+        label,
+        property
+      });
+
+      const encodedValues = trackedUrl.split('ixid=')[1];
+      const decodedValues = base64.decode(encodedValues);
+
+      expect(decodedValues).toEqual(`my-app;search;dog;5;`);
     });
 
     describe("when the URL has no params", () => {

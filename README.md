@@ -6,7 +6,7 @@ Easily track the source and use of an image via its `ixid` param.
 
 These URLs are encoded and decoded using a few rules:
 
-1. all parameters are dasherized, i.e. `unsplash`, `unsplash-source`, `unsplash-instant`, etc.
+1. all parameters are lowercase and dasherized, i.e. `unsplash`, `unsplash-source`, `unsplash-instant`, etc.
 2. if a tracking parameter is not needed, it is replaced with an empty string. i.e. if given `{ app: 'my-app', page: null, label: 'dog', property: '1' }`, the decoded tracking would be: `my-app;;dog;1;`
 3. an `app` value must always be given
 
