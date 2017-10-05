@@ -1,6 +1,6 @@
 {
   "name": "imgix-trackable",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Easily track the source of an Imgix URL via the ixid param",
   "license": "MIT",
   "repository": "unsplash/imgix-trackable",
