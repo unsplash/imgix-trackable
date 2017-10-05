@@ -1,0 +1,28 @@
+{
+  "name": "imgix-trackable",
+  "version": "0.0.0",
+  "description": "Easily track the source of an Imgix URL via the ixid param",
+  "license": "MIT",
+  "repository": "unsplash/imgix-trackable",
+  "author": {
+    "name": "Unsplash",
+    "email": "friends@unsplash.com",
+    "url": "github.com/unsplash"
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "scripts": {
+    "test": "jasmine"
+  },
+  "files": [
+    "lib/index.js"
+  ],
+  "keywords": [
+    "imgix"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine": "^2.8.0"
+  }
+}
