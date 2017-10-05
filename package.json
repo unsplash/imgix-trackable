@@ -1,6 +1,6 @@
 {
   "name": "imgix-trackable",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Easily track the source of an Imgix URL via the ixid param",
   "license": "MIT",
   "repository": "unsplash/imgix-trackable",
@@ -14,7 +14,11 @@
   },
   "scripts": {
     "test": "npm run build && jasmine",
-    "build": "babel src -d lib"
+    "build": "babel src -d lib",
+    "prepublish": "npm run build",
+    "publish:major": "npm run prepublish && npm version major",
+    "publish:minor": "npm run prepublish && npm version minor",
+    "publish:patch": "npm run prepublish && npm version patch"
   },
   "files": [
     "lib/index.js"
