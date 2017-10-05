@@ -21,7 +21,9 @@
   "keywords": [
     "imgix"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "base-64": "^0.1.0"
+  },
   "devDependencies": {
     "jasmine": "^2.8.0"
   }
