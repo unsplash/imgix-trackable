@@ -1,6 +1,14 @@
 # imgix-trackable [![Build Status](https://travis-ci.org/unsplash/imgix-trackable.svg?branch=master)](https://travis-ci.org/unsplash/imgix-trackable)
 
-Easily track the source and use of an image via its via the `ixid` param.
+Easily track the source and use of an image via its `ixid` param.
+
+## Rules
+
+These URLs are encoded and decoded using a few rules:
+
+1. all parameters are dasherized, i.e. `unsplash`, `unsplash-source`, `unsplash-instant`, etc.
+2. if a tracking parameter is not needed, it is replaced with an empty string. i.e. if given `{ app: 'my-app', page: null, label: 'dog', property: '1' }`, the decoded tracking would be: `my-app;;dog;1;`
+3. an `app` value must always be given
 
 ## Install
 
@@ -8,24 +16,23 @@ Easily track the source and use of an image via its via the `ixid` param.
 $ npm install imgix-trackable
 ```
 
-## Usage
+## API
+
+### track(url, [options])
+
+Add or override the tracking parameters on an imgix URL.
 
 ```js
 const imgixTrackable = require('imgix-trackable');
 
-imgixTrackable('https://images.unsplash.com/photo-123', {
+imgixTrackable.track('https://images.unsplash.com/photo-123', {
   app: 'my-app',
   page: 'search',
   label: 'dog',
   property: '1'
 });
-//=> 'https://images.unsplash.com/photo-123?ixid=asdasd'
+//=> 'https://images.unsplash.com/photo-123?ixid={base64EncodedOptions}'
 ```
-
-
-## API
-
-### imgixTrackable(url, [options])
 
 #### url
 
@@ -62,6 +69,26 @@ Type: `string`<br>
 Default: `null`
 
 An additional identifier, like the position on the page. (optional)
+
+### decode(url)
+
+Take an imgix URL that may have tracking on it, and return the tracking parameters. This is the inverse operation of `track`.
+
+```js
+const imgixTrackable = require('imgix-trackable');
+
+imgixTrackable.decode('https://images.unsplash.com/photo-123?ixid=');
+//=>
+// {
+//   url: 'https://images.unsplash.com/photo-123',
+//   app: 'my-app',
+//   page: 'search',
+//   label: 'dog',
+//   property: '1'
+//  }
+```
+
+Returns a `trackableObject`, with the tracking properties split from the URL. Note: the `url` will still contain other properties, like the `w`, `h`, etc.
 
 ## License
 

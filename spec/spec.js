@@ -46,22 +46,22 @@ describe("imgix-trackable", function() {
   describe("#track", () => {
     it("encodes the tracking options in base 64", () => {
       const baseUrl = 'https://images.unsplash.com/photo-123';
-      const appName = 'my-app';
-      const appPage = 'search';
-      const appLabel = 'dog';
-      const appProperty = '5';
+      const app = 'my-app';
+      const page = 'search';
+      const label = 'dog';
+      const property = '5';
 
       const trackedUrl = track(baseUrl, {
-        app: appName,
-        page: appPage,
-        label: appLabel,
-        property: appProperty
+        app,
+        page,
+        label,
+        property
       });
 
       const encodedValues = trackedUrl.split('ixid=')[1];
       const decodedValues = base64.decode(encodedValues);
 
-      expect(decodedValues).toEqual(`${appName};${appPage};${appLabel};${appProperty};`);
+      expect(decodedValues).toEqual(`${app};${page};${label};${property};`);
     });
 
     describe("when the URL has no params", () => {
@@ -91,6 +91,62 @@ describe("imgix-trackable", function() {
         expect(trackedUrl).toContain('ixid=');
         expect(trackedUrl).not.toContain('456');
       });
+    });
+  });
+
+  describe("#decode", () => {
+    it("splits the URL back into its tracking components", () => {
+      // URL: 'https://images.unsplash.com/photo-123?w=200&ixid=...
+      // Options:
+      //   - app: 'my-app'
+      //   - page: ''
+      //   - label: ''
+      //   - property: ''
+      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwOzs7Ow=='
+
+      const tracklableObject = decode(url);
+
+      expect(tracklableObject.url).toEqual('https://images.unsplash.com/photo-123?w=200');
+      expect(tracklableObject.app).toEqual('my-app');
+      expect(tracklableObject.page).toEqual(undefined);
+      expect(tracklableObject.label).toEqual(undefined);
+      expect(tracklableObject.property).toEqual(undefined);
+    });
+
+    it("splits the URL back into its tracking components", () => {
+      // URL: https://images.unsplash.com/photo-123?w=200?ixid=...
+      // Options:
+      //   - app: 'my-app'
+      //   - page: 'search'
+      //   - label: 'dog'
+      //   - property: '5'
+      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwO3NlYXJjaDtkb2c7NTs='
+
+      const tracklableObject = decode(url);
+
+      expect(tracklableObject.url).toEqual('https://images.unsplash.com/photo-123?w=200');
+      expect(tracklableObject.app).toEqual('my-app');
+      expect(tracklableObject.page).toEqual('search');
+      expect(tracklableObject.label).toEqual('dog');
+      expect(tracklableObject.property).toEqual('5');
+    });
+
+    it("splits the URL back into its tracking components", () => {
+      // URL: https://images.unsplash.com/photo-123?w=200&ixid=...&h=300
+      // Options:
+      //   - app: 'my-app'
+      //   - page: ''
+      //   - label: ''
+      //   - property: ''
+      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwOzs7Ow==&h=300';
+
+      const tracklableObject = decode(url);
+
+      expect(tracklableObject.url).toEqual('https://images.unsplash.com/photo-123?w=200&h=300');
+      expect(tracklableObject.app).toEqual('my-app');
+      expect(tracklableObject.page).toEqual(undefined);
+      expect(tracklableObject.label).toEqual(undefined);
+      expect(tracklableObject.property).toEqual(undefined);
     });
   });
 });
