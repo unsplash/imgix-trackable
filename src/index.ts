@@ -2,24 +2,14 @@ import base64 = require('base-64');
 import queryStringHelpers = require('querystring');
 import urlHelpers = require('url');
 
+import { getOrElseMaybe, mapMaybe, Maybe, normalizeMaybe } from './maybe';
+
 const emptyStringToUndefined = (str: string): string | undefined => (str === '' ? undefined : str);
 
 // TS doesn't return the correct type for array and object index signatures. It returns `T` instead
 // of `T | undefined`. These helpers give us the correct type.
 const getIndex = <X>(index: number, xs: X[]): X | undefined => xs[index];
 const getKey = <X>(index: string, xs: { [key: string]: X }): X | undefined => xs[index];
-
-type Maybe<T> = undefined | T;
-
-const isMaybeDefined = <T>(maybeT: Maybe<T>): maybeT is T => maybeT !== undefined;
-
-const mapMaybe = <T, B>(f: (t: T) => B, maybeT: Maybe<T>): Maybe<B> =>
-  isMaybeDefined(maybeT) ? f(maybeT) : maybeT;
-
-const getOrElseMaybe = <T>(f: () => T, maybeT: Maybe<T>): T =>
-  isMaybeDefined(maybeT) ? maybeT : f();
-
-const normalizeMaybe = <T>(nullMaybe: T | null) => (nullMaybe === null ? undefined : nullMaybe);
 
 const TRACKING_PARAM = 'ixid';
 
