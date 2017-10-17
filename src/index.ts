@@ -1,16 +1,42 @@
 import base64 = require('base-64');
+import queryStringHelpers = require('querystring');
+import urlHelpers = require('url');
+
+const getKey = <X>(index: string, xs: { [key: string]: X }): X | undefined => xs[index];
+
+type Maybe<T> = undefined | T;
+
+const isMaybeDefined = <T>(maybeT: Maybe<T>): maybeT is T => maybeT !== undefined;
+
+const mapMaybe = <T, B>(f: (t: T) => B, maybeT: Maybe<T>): Maybe<B> =>
+  isMaybeDefined(maybeT) ? f(maybeT) : maybeT;
+
+const getOrElseMaybe = <T>(f: () => T, maybeT: Maybe<T>): T =>
+  isMaybeDefined(maybeT) ? maybeT : f();
+
+const normalizeMaybe = <T>(nullMaybe: T | null) => (nullMaybe === null ? undefined : nullMaybe);
 
 const TRACKING_PARAM = 'ixid';
 
-const trackingExpression = /(ixid=.*(?=&))|(ixid=.*)/i;
-export const _findTrackingParamsInUrl = (url: string) => {
-  const matches = url.match(trackingExpression);
+const getQueryStringFromUrl = (str: string): Maybe<string> =>
+  normalizeMaybe(
+    // We cast here to workaround Node typings which incorrectly specify any
+    urlHelpers.parse(str).query as null | string,
+  );
+const parseQueryString = (str: string): Record<string, string> =>
+  // We cast here to workaround Node typings which incorrectly specify any
+  queryStringHelpers.parse(str) as Record<string, string>;
 
-  if (matches !== null) {
-    return matches[0];
-  } else {
-    return '';
-  }
+export const _findTrackingParamsInUrl = (url: string): string => {
+  const maybeQueryString = getQueryStringFromUrl(url);
+  const maybeQuery = mapMaybe(parseQueryString, maybeQueryString);
+  return getOrElseMaybe(
+    () => '',
+    mapMaybe(
+      s => `${TRACKING_PARAM}=${s}`,
+      mapMaybe(query => getKey(TRACKING_PARAM, query), maybeQuery),
+    ),
+  );
 };
 
 const sanitize = (str: string | undefined) => {
