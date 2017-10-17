@@ -114,15 +114,6 @@ type TrackingObject = {
   property?: string;
 };
 
-const buildTrackingObject = ({ url, app, page, label, property }: Partial<TrackingObject>) =>
-  ({
-    url,
-    app,
-    page,
-    label,
-    property,
-  });
-
 export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) => {
   const { app, page, label, property } = options;
 
@@ -130,11 +121,11 @@ export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) =>
   return setParamForUrl(TRACKING_PARAM, newTrackingParams)(baseUrl);
 };
 
-export const decode = (originalUrl: string) => {
+export const decode = (originalUrl: string): TrackingObject => {
   const trackingParams = _findTrackingParamsInUrl(originalUrl);
 
   if (trackingParams === undefined) {
-    return buildTrackingObject({ url: originalUrl });
+    return { url: originalUrl };
   }
 
   const encodedValues = trackingParams;
@@ -147,11 +138,11 @@ export const decode = (originalUrl: string) => {
   const label = mapMaybe(emptyStringToUndefined, getIndex(2, values));
   const property = mapMaybe(emptyStringToUndefined, getIndex(3, values));
 
-  return buildTrackingObject({
+  return {
     url,
     app,
     page,
     label,
     property,
-  });
+  };
 };
