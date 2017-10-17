@@ -26,11 +26,12 @@ type Query = Record<string, string>;
 const parseQueryString = (str: string): Query =>
   // We cast here to workaround Node typings which incorrectly specify any
   queryStringHelpers.parse(str) as Query;
+const getTrackingQueryParam = (query: Query) => getKey(TRACKING_PARAM, query);
 
 export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
   const maybeQueryString = getQueryStringFromUrl(url);
   const maybeQuery = mapMaybe(parseQueryString, maybeQueryString);
-  return mapMaybe(query => getKey(TRACKING_PARAM, query), maybeQuery);
+  return mapMaybe(getTrackingQueryParam, maybeQuery);
 };
 
 const sanitize = (str: string | undefined) => {
