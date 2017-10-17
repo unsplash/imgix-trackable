@@ -50,14 +50,22 @@ const set = <T>(key: string, value: T, obj: Record<string, T>): Record<string, T
   return copy;
 };
 
-const mapQueryForUrl = (fn: (query: Query) => Query) => (url: string) => {
+const mapQueryForUrl = (
+  fn: (query: Query) => Query,
+  queryStringifyOptions: queryStringHelpers.StringifyOptions,
+) => (url: string) => {
   const parsedUrl = urlHelpers.parse(url);
 
   const maybeQueryString = getQueryStringFromParsedUrl(parsedUrl);
   const query = getOrElseMaybe(() => ({}), mapMaybe(parseQueryString, maybeQueryString));
 
   const newQuery: Query = fn(query);
-  const newQueryString = queryStringHelpers.stringify(newQuery);
+  const newQueryString = queryStringHelpers.stringify(
+    newQuery,
+    undefined,
+    undefined,
+    queryStringifyOptions,
+  );
 
   const newParsedUrl = { ...parsedUrl, search: newQueryString };
   const newUrl = urlHelpers.format(newParsedUrl);
@@ -65,11 +73,22 @@ const mapQueryForUrl = (fn: (query: Query) => Query) => (url: string) => {
   return newUrl;
 };
 
+const identity = <T>(t: T) => t;
+
+// 1. Opt-out of URI encoding of query param values. imgix requires Base64 encoding, and we handle
+//    this prior to this function call.
+
 const omitParamFromUrl = (param: string) => (url: string): string =>
-  mapQueryForUrl(query => omit(param, query))(url);
+  mapQueryForUrl(query => omit(param, query), {
+    // [1]
+    encodeURIComponent: identity,
+  })(url);
 
 const setParamForUrl = (param: string, value: string) => (url: string): string =>
-  mapQueryForUrl(query => set(param, value, query))(url);
+  mapQueryForUrl(query => set(param, value, query), {
+    // [1]
+    encodeURIComponent: identity,
+  })(url);
 
 const omitTrackingParamFromUrl = omitParamFromUrl(TRACKING_PARAM);
 
