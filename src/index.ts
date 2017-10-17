@@ -108,10 +108,10 @@ const encodeTrackingOptions = (...args: (string | undefined)[]) =>
 
 type TrackingObject = {
   url: string;
-  app: string;
-  page: string;
-  label: string;
-  property: string;
+  app?: string;
+  page?: string;
+  label?: string;
+  property?: string;
 };
 
 const buildTrackingObject = ({ url, app, page, label, property }: Partial<TrackingObject>) =>
