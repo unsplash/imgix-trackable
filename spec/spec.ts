@@ -136,11 +136,12 @@ describe('imgix-trackable', function() {
     it('splits the URL back into its tracking components', () => {
       // URL: 'https://images.unsplash.com/photo-123?w=200&ixid=...
       // Options:
-      //   - app: 'my-app'
-      //   - page: ''
-      //   - label: ''
-      //   - property: ''
-      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwOzs7Ow==';
+      const app = 'my-app';
+      const page = '';
+      const label = '';
+      const property = '';
+      const encoded = base64.encode(`${app};${page};${label};${property};`);
+      const url = `https://images.unsplash.com/photo-123?w=200&ixid=${encoded}`;
 
       const tracklableObject = decode(url);
 
@@ -154,11 +155,12 @@ describe('imgix-trackable', function() {
     it('splits the URL back into its tracking components', () => {
       // URL: https://images.unsplash.com/photo-123?w=200?ixid=...
       // Options:
-      //   - app: 'my-app'
-      //   - page: 'search'
-      //   - label: 'dog'
-      //   - property: '5'
-      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwO3NlYXJjaDtkb2c7NTs=';
+      const app = 'my-app';
+      const page = 'search';
+      const label = 'dog';
+      const property = '5';
+      const encoded = base64.encode(`${app};${page};${label};${property};`);
+      const url = `https://images.unsplash.com/photo-123?w=200&ixid=${encoded}`;
 
       const tracklableObject = decode(url);
 
@@ -172,11 +174,12 @@ describe('imgix-trackable', function() {
     it('splits the URL back into its tracking components', () => {
       // URL: https://images.unsplash.com/photo-123?w=200&ixid=...&h=300
       // Options:
-      //   - app: 'my-app'
-      //   - page: ''
-      //   - label: ''
-      //   - property: ''
-      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwOzs7Ow==&h=300';
+      const app = 'my-app';
+      const page = '';
+      const label = '';
+      const property = '';
+      const encoded = base64.encode(`${app};${page};${label};${property};`);
+      const url = `https://images.unsplash.com/photo-123?w=200&ixid=${encoded}&h=300`;
 
       const tracklableObject = decode(url);
 
