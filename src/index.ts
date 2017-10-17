@@ -44,6 +44,12 @@ const omit = <T>(key: string, obj: Record<string, T>): Record<string, T> => {
   return copy;
 };
 
+const set = <T>(key: string, value: T, obj: Record<string, T>): Record<string, T> => {
+  const copy = { ...obj };
+  copy[key] = value;
+  return copy;
+};
+
 const mapQueryForUrl = (fn: (query: Query) => Query) => (url: string) => {
   const parsedUrl = urlHelpers.parse(url);
 
@@ -57,10 +63,13 @@ const mapQueryForUrl = (fn: (query: Query) => Query) => (url: string) => {
   const newUrl = urlHelpers.format(newParsedUrl);
 
   return newUrl;
-}
+};
 
 const omitParamFromUrl = (param: string) => (url: string): string =>
   mapQueryForUrl(query => omit(param, query))(url);
+
+const setParamForUrl = (param: string, value: string) => (url: string): string =>
+  mapQueryForUrl(query => set(param, value, query))(url);
 
 const omitTrackingParamFromUrl = omitParamFromUrl(TRACKING_PARAM);
 
@@ -98,22 +107,8 @@ const buildTrackingObject = ({ url, app, page, label, property }: Partial<Tracki
 export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) => {
   const { app, page, label, property } = options;
 
-  const newTrackingParams = encodeTrackingOptions(
-    app,
-    page,
-    label,
-    property,
-  );
-  const existingTrackParams = _findTrackingParamsInUrl(baseUrl);
-
-  if (existingTrackParams !== undefined) {
-    return baseUrl.replace(existingTrackParams, newTrackingParams);
-  } else {
-    const hasParams = baseUrl.split('?').length >= 2;
-    const joinOperator = hasParams ? '&' : '?';
-
-    return `${baseUrl}${joinOperator}${TRACKING_PARAM}=${newTrackingParams}`;
-  }
+  const newTrackingParams = encodeTrackingOptions(app, page, label, property);
+  return setParamForUrl(TRACKING_PARAM, newTrackingParams)(baseUrl);
 };
 
 export const decode = (originalUrl: string) => {
