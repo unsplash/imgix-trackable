@@ -12,6 +12,11 @@ export const getQueryStringFromParsedUrl = (parsedUrl: urlHelpers.Url): Maybe<st
 
 export type Query = Record<string, string>;
 
+export type QueryOptions = {
+  queryStringifyOptions: queryStringHelpers.StringifyOptions;
+  queryParseOptions: queryStringHelpers.ParseOptions;
+};
+
 export const parseQueryString = (queryParseOptions: queryStringHelpers.ParseOptions) => (
   str: string,
 ): Query =>
@@ -20,9 +25,10 @@ export const parseQueryString = (queryParseOptions: queryStringHelpers.ParseOpti
 
 export const mapQueryForUrl = (
   fn: (query: Query) => Query,
-  queryStringifyOptions: queryStringHelpers.StringifyOptions,
-  queryParseOptions: queryStringHelpers.ParseOptions,
+  queryOptions: QueryOptions,
 ) => (url: string) => {
+  const { queryParseOptions, queryStringifyOptions } = queryOptions;
+
   const parsedUrl = urlHelpers.parse(url);
 
   const maybeQueryString = getQueryStringFromParsedUrl(parsedUrl);
@@ -47,14 +53,11 @@ export const mapQueryForUrl = (
 
 export const omitQueryParamFromUrl = (
   param: string,
-  queryStringifyOptions: queryStringHelpers.StringifyOptions,
-  queryParseOptions: queryStringHelpers.ParseOptions,
-) => (url: string): string =>
-  mapQueryForUrl(query => omit(param, query), queryStringifyOptions, queryParseOptions)(url);
+  queryOptions: QueryOptions,
+) => (url: string): string => mapQueryForUrl(query => omit(param, query), queryOptions)(url);
 
 export const setQueryParamForUrl = (
   param: string,
-  queryStringifyOptions: queryStringHelpers.StringifyOptions,
-  queryParseOptions: queryStringHelpers.ParseOptions,
+  queryOptions: QueryOptions,
 ) => (value: string) => (url: string): string =>
-  mapQueryForUrl(query => set(param, value, query), queryStringifyOptions, queryParseOptions)(url);
+  mapQueryForUrl(query => set(param, value, query), queryOptions)(url);
