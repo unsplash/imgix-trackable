@@ -86,7 +86,7 @@ export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) =>
     const hasParams = baseUrl.split('?').length >= 2;
     const joinOperator = hasParams ? '&' : '?';
 
-    return baseUrl + joinOperator + `${TRACKING_PARAM}=${newTrackingParams}`;
+    return `${baseUrl}${joinOperator}${TRACKING_PARAM}=${newTrackingParams}`;
   }
 };
 
