@@ -141,13 +141,14 @@ export const decode = (originalUrl: string) => {
   const decodedValues = base64.decode(encodedValues);
   const values = decodedValues.split(';');
 
+  const url = omitTrackingParamFromUrl(originalUrl);
   const app = getIndex(0, values);
   const page = mapMaybe(emptyStringToUndefined, getIndex(1, values));
   const label = mapMaybe(emptyStringToUndefined, getIndex(2, values));
   const property = mapMaybe(emptyStringToUndefined, getIndex(3, values));
 
   return buildTrackingObject({
-    url: omitTrackingParamFromUrl(originalUrl),
+    url,
     app,
     page,
     label,
