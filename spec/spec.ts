@@ -139,6 +139,26 @@ describe('imgix-trackable', function() {
   });
 
   describe('#decode', () => {
+    it('given a value without user ID, splits the URL back into its tracking components', () => {
+      // URL: 'https://images.unsplash.com/photo-123?w=200&ixid=...
+      // Options:
+      const app = 'my-app';
+      const page = '';
+      const label = '';
+      const property = '';
+      const encoded = base64.encode(`${app};${page};${label};${property};`);
+      const url = `https://images.unsplash.com/photo-123?w=200&ixid=${encoded}`;
+
+      const tracklableObject = decode(url);
+
+      expect(tracklableObject.url).toEqual('https://images.unsplash.com/photo-123?w=200');
+      expect(tracklableObject.app).toEqual('my-app');
+      expect(tracklableObject.page).toEqual(undefined);
+      expect(tracklableObject.label).toEqual(undefined);
+      expect(tracklableObject.property).toEqual(undefined);
+      expect(tracklableObject.userId).toEqual(undefined);
+    });
+
     it('splits the URL back into its tracking components', () => {
       // URL: 'https://images.unsplash.com/photo-123?w=200&ixid=...
       // Options:
