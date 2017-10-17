@@ -1,10 +1,8 @@
-const base64 = require('base-64');
+import base64 = require('base-64');
+
+import { track, decode, _findTrackingParamsInUrl as findTrackingParamsInUrl } from '../src';
 
 describe('imgix-trackable', function() {
-  const track = require('../lib').track;
-  const decode = require('../lib').decode;
-  const findTrackingParamsInUrl = require('../lib')._findTrackingParamsInUrl;
-
   describe('#findTrackingParamsInUrl', () => {
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?w=200&ixid=asdkasdkahsdhasd==&dog=true';
