@@ -24,9 +24,8 @@ const sanitize = (str: string | undefined) => {
     .toLowerCase();
 };
 
-const encodeTrackingOptions = (...args: (string | undefined)[]) => {
-  return base64.encode(args.map(sanitize).join(';') + ';');
-};
+const encodeTrackingOptions = (...args: (string | undefined)[]) =>
+  base64.encode(args.map(sanitize).join(';') + ';');
 
 type TrackingObject = {
   url: string;
@@ -36,15 +35,14 @@ type TrackingObject = {
   property: string;
 };
 
-const buildTrackingObject = ({ url, app, page, label, property }: Partial<TrackingObject>) => {
-  return {
+const buildTrackingObject = ({ url, app, page, label, property }: Partial<TrackingObject>) =>
+  ({
     url,
     app,
     page,
     label,
     property,
-  };
-};
+  });
 
 export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) => {
   const { app, page, label, property } = options;

@@ -6,6 +6,7 @@
       "ordered-imports": [true],
       "no-inferrable-types": [true, "ignore-properties"],
       "no-switch-case-fall-through": true,
+      "arrow-return-shorthand": [true, "multiline"],
       "no-use-before-declare": true,
       "no-inferred-empty-object-type": true,
       "unified-signatures": true,
