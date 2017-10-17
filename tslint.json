@@ -3,6 +3,7 @@
       "no-any": true,
       "no-unsafe-any": true,
       "no-unused-variable": [true, "check-parameters"],
+      "strict-boolean-expressions": true,
       "ordered-imports": [true],
       "no-inferrable-types": [true, "ignore-properties"],
       "no-switch-case-fall-through": true,
