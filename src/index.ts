@@ -81,7 +81,7 @@ const omitParamFromUrl = (param: string) => (url: string): string =>
     encodeURIComponent: identity,
   })(url);
 
-const setParamForUrl = (param: string, value: string) => (url: string): string =>
+const setParamForUrl = (param: string) => (value: string) => (url: string): string =>
   mapQueryForUrl(query => set(param, value, query), {
     // [1]
     encodeURIComponent: identity,
@@ -95,6 +95,8 @@ export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
 };
 
 const omitTrackingParamFromUrl = omitParamFromUrl(TRACKING_PARAM);
+
+const setTrackingParamForUrl = setParamForUrl(TRACKING_PARAM);
 
 const sanitize = (str: string | undefined) => {
   if (str === undefined) {
@@ -122,7 +124,7 @@ export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) =>
   const { app, page, label, property } = options;
 
   const newTrackingParams = encodeTrackingOptions(app, page, label, property);
-  return setParamForUrl(TRACKING_PARAM, newTrackingParams)(baseUrl);
+  return setTrackingParamForUrl(newTrackingParams)(baseUrl);
 };
 
 export const decode = (originalUrl: string): TrackingObject => {
