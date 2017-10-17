@@ -18,7 +18,8 @@
     "prepublish": "npm run build",
     "publish:major": "npm run prepublish && npm version major",
     "publish:minor": "npm run prepublish && npm version minor",
-    "publish:patch": "npm run prepublish && npm version patch"
+    "publish:patch": "npm run prepublish && npm version patch",
+    "format": "prettier --write '{src,spec}/**/*.js'"
   },
   "main": "lib/index.js",
   "keywords": [
@@ -30,6 +31,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.0",
-    "jasmine": "^2.8.0"
+    "jasmine": "^2.8.0",
+    "prettier": "^1.7.4"
   }
 }
