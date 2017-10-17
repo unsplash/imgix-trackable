@@ -13,14 +13,21 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "npm run build && jasmine",
-    "build": "babel src -d lib",
-    "prepublish": "npm run build",
+    "test": "npm run lint:spec && npm run build:spec && jasmine",
+    "lint:src": "tslint --project ./src",
+    "lint:spec": "tslint --project ./spec",
+    "build:src": "tsc --project ./src --outDir ./target-src",
+    "build:spec": "tsc --project ./spec --outDir ./target-spec",
+    "prepublish": "npm run lint:src && npm run build:src",
     "publish:major": "npm run prepublish && npm version major",
     "publish:minor": "npm run prepublish && npm version minor",
-    "publish:patch": "npm run prepublish && npm version patch"
+    "publish:patch": "npm run prepublish && npm version patch",
+    "format": "prettier --write '{src,spec}/**/*.ts'"
   },
-  "main": "lib/index.js",
+  "main": "target-src/index.js",
+  "files": [
+    "target-src"
+  ],
   "keywords": [
     "imgix"
   ],
@@ -28,8 +35,12 @@
     "base-64": "^0.1.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "jasmine": "^2.8.0"
+    "@types/base-64": "^0.1.2",
+    "@types/jasmine": "^2.6.0",
+    "jasmine": "^2.8.0",
+    "prettier": "^1.7.4",
+    "tslint": "^5.7.0",
+    "tslint-language-service": "^0.9.6",
+    "typescript": "^2.5.3"
   }
 }
