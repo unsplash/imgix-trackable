@@ -3,6 +3,9 @@ import queryStringHelpers = require('querystring');
 import urlHelpers = require('url');
 
 const emptyStringToUndefined = (str: string): string | undefined => (str === '' ? undefined : str);
+
+// TS doesn't return the correct type for array and object index signatures. It returns `T` instead
+// of `T | undefined`. These helpers give us the correct type.
 const getIndex = <X>(index: number, xs: X[]): X | undefined => xs[index];
 const getKey = <X>(index: string, xs: { [key: string]: X }): X | undefined => xs[index];
 
