@@ -22,9 +22,10 @@ const getQueryStringFromUrl = (str: string): Maybe<string> =>
     // We cast here to workaround Node typings which incorrectly specify any
     urlHelpers.parse(str).query as null | string,
   );
-const parseQueryString = (str: string): Record<string, string> =>
+type Query = Record<string, string>;
+const parseQueryString = (str: string): Query =>
   // We cast here to workaround Node typings which incorrectly specify any
-  queryStringHelpers.parse(str) as Record<string, string>;
+  queryStringHelpers.parse(str) as Query;
 
 export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
   const maybeQueryString = getQueryStringFromUrl(url);
