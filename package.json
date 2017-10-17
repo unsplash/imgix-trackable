@@ -22,7 +22,7 @@
     "publish:major": "npm run prepublish && npm version major",
     "publish:minor": "npm run prepublish && npm version minor",
     "publish:patch": "npm run prepublish && npm version patch",
-    "format": "prettier --write '{src,spec}/**/*.js'"
+    "format": "prettier --write '{src,spec}/**/*.ts'"
   },
   "main": "target-src/index.js",
   "files": [
