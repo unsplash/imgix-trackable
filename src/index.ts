@@ -61,13 +61,13 @@ const mapQueryForUrl = (
 
 const identity = <T>(t: T) => t;
 
-const omitParamFromUrl = (
+const omitQueryParamFromUrl = (
   param: string,
   queryStringifyOptions: queryStringHelpers.StringifyOptions,
 ) => (url: string): string =>
   mapQueryForUrl(query => omit(param, query), queryStringifyOptions)(url);
 
-const setParamForUrl = (
+const setQueryParamForUrl = (
   param: string,
   queryStringifyOptions: queryStringHelpers.StringifyOptions,
 ) => (value: string) => (url: string): string =>
@@ -87,12 +87,12 @@ export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
 // 1. Opt-out of URI encoding of query param values. imgix requires Base64 encoding, and we handle
 //    this prior to this function call.
 
-const omitTrackingParamFromUrl = omitParamFromUrl(TRACKING_PARAM, {
+const omitTrackingParamFromUrl = omitQueryParamFromUrl(TRACKING_PARAM, {
   // [1]
   encodeURIComponent: identity,
 });
 
-const setTrackingParamForUrl = setParamForUrl(TRACKING_PARAM, {
+const setTrackingParamForUrl = setQueryParamForUrl(TRACKING_PARAM, {
   // [1]
   encodeURIComponent: identity,
 });
