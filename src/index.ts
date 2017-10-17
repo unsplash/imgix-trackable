@@ -2,6 +2,8 @@ import base64 = require('base-64');
 import queryStringHelpers = require('querystring');
 import urlHelpers = require('url');
 
+const emptyStringToUndefined = (str: string): string | undefined => (str === '' ? undefined : str);
+const getIndex = <X>(index: number, xs: X[]): X | undefined => xs[index];
 const getKey = <X>(index: string, xs: { [key: string]: X }): X | undefined => xs[index];
 
 type Maybe<T> = undefined | T;
@@ -88,8 +90,6 @@ export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) =>
   }
 };
 
-const emptyStringToUndefined = (str: string): string | undefined => str === '' ? undefined : str;
-
 export const decode = (originalUrl: string) => {
   const trackingParams = _findTrackingParamsInUrl(originalUrl);
 
@@ -101,10 +101,10 @@ export const decode = (originalUrl: string) => {
   const decodedValues = base64.decode(encodedValues);
   const values = decodedValues.split(';');
 
-  const app = values[0];
-  const page = emptyStringToUndefined(values[1]);
-  const label = emptyStringToUndefined(values[2]);
-  const property = emptyStringToUndefined(values[3]);
+  const app = getIndex(0, values);
+  const page = mapMaybe(emptyStringToUndefined, getIndex(1, values));
+  const label = mapMaybe(emptyStringToUndefined, getIndex(2, values));
+  const property = mapMaybe(emptyStringToUndefined, getIndex(3, values));
 
   return buildTrackingObject({
     url: originalUrl.replace(new RegExp(`.${TRACKING_PARAM}=${trackingParams}`), ''),
