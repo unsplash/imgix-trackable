@@ -1,9 +1,9 @@
-const base64 = require('base-64');
+import base64 = require('base-64');
 
 const TRACKING_PARAM = 'ixid';
 
 const trackingExpression = /(ixid=.*(?=&))|(ixid=.*)/i;
-const findTrackingParamsInUrl = url => {
+export const _findTrackingParamsInUrl = (url: string) => {
   const matches = url.match(trackingExpression);
 
   if (matches) {
@@ -13,7 +13,7 @@ const findTrackingParamsInUrl = url => {
   }
 };
 
-const sanitize = str => {
+const sanitize = (str: string) => {
   if (!str) {
     return '';
   }
@@ -24,11 +24,19 @@ const sanitize = str => {
     .toLowerCase();
 };
 
-const encodeTrackingOptions = (...args) => {
+const encodeTrackingOptions = (...args: (string | undefined)[]) => {
   return base64.encode(args.map(sanitize).join(';') + ';');
 };
 
-const buildTrackingObject = ({ url, app, page, label, property }) => {
+type TrackingObject = {
+  url: string;
+  app: string;
+  page: string;
+  label: string;
+  property: string;
+};
+
+const buildTrackingObject = ({ url, app, page, label, property }: Partial<TrackingObject>) => {
   return {
     url,
     app,
@@ -38,7 +46,7 @@ const buildTrackingObject = ({ url, app, page, label, property }) => {
   };
 };
 
-const track = (baseUrl, options = {}) => {
+export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) => {
   const { app, page, label, property } = options;
 
   const newTrackingParams = `${TRACKING_PARAM}=${encodeTrackingOptions(
@@ -47,7 +55,7 @@ const track = (baseUrl, options = {}) => {
     label,
     property,
   )}`;
-  const existingTrackParams = findTrackingParamsInUrl(baseUrl);
+  const existingTrackParams = _findTrackingParamsInUrl(baseUrl);
 
   if (existingTrackParams) {
     return baseUrl.replace(existingTrackParams, newTrackingParams);
@@ -59,8 +67,8 @@ const track = (baseUrl, options = {}) => {
   }
 };
 
-const decode = originalUrl => {
-  const trackingParams = findTrackingParamsInUrl(originalUrl);
+export const decode = (originalUrl: string) => {
+  const trackingParams = _findTrackingParamsInUrl(originalUrl);
 
   if (!trackingParams) {
     return buildTrackingObject({ url: originalUrl });
@@ -82,10 +90,4 @@ const decode = originalUrl => {
     label,
     property,
   });
-};
-
-module.exports = {
-  _findTrackingParamsInUrl: findTrackingParamsInUrl,
-  track,
-  decode,
 };
