@@ -31,7 +31,7 @@ describe('imgix-trackable', function() {
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?w=200';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('');
+      expect(findTrackingParamsInUrl(url)).toEqual(undefined);
     });
 
     it('', () => {

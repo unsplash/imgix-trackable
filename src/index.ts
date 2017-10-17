@@ -13,9 +13,6 @@ const isMaybeDefined = <T>(maybeT: Maybe<T>): maybeT is T => maybeT !== undefine
 const mapMaybe = <T, B>(f: (t: T) => B, maybeT: Maybe<T>): Maybe<B> =>
   isMaybeDefined(maybeT) ? f(maybeT) : maybeT;
 
-const getOrElseMaybe = <T>(f: () => T, maybeT: Maybe<T>): T =>
-  isMaybeDefined(maybeT) ? maybeT : f();
-
 const normalizeMaybe = <T>(nullMaybe: T | null) => (nullMaybe === null ? undefined : nullMaybe);
 
 const TRACKING_PARAM = 'ixid';
@@ -29,13 +26,10 @@ const parseQueryString = (str: string): Record<string, string> =>
   // We cast here to workaround Node typings which incorrectly specify any
   queryStringHelpers.parse(str) as Record<string, string>;
 
-export const _findTrackingParamsInUrl = (url: string): string => {
+export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
   const maybeQueryString = getQueryStringFromUrl(url);
   const maybeQuery = mapMaybe(parseQueryString, maybeQueryString);
-  return getOrElseMaybe(
-    () => '',
-    mapMaybe(query => getKey(TRACKING_PARAM, query), maybeQuery),
-  );
+  return mapMaybe(query => getKey(TRACKING_PARAM, query), maybeQuery);
 };
 
 const sanitize = (str: string | undefined) => {
@@ -80,7 +74,7 @@ export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) =>
   );
   const existingTrackParams = _findTrackingParamsInUrl(baseUrl);
 
-  if (existingTrackParams !== '') {
+  if (existingTrackParams !== undefined) {
     return baseUrl.replace(existingTrackParams, newTrackingParams);
   } else {
     const hasParams = baseUrl.split('?').length >= 2;
@@ -93,7 +87,7 @@ export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) =>
 export const decode = (originalUrl: string) => {
   const trackingParams = _findTrackingParamsInUrl(originalUrl);
 
-  if (trackingParams === '') {
+  if (trackingParams === undefined) {
     return buildTrackingObject({ url: originalUrl });
   }
 
