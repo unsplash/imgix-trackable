@@ -13,6 +13,9 @@ const isMaybeDefined = <T>(maybeT: Maybe<T>): maybeT is T => maybeT !== undefine
 const mapMaybe = <T, B>(f: (t: T) => B, maybeT: Maybe<T>): Maybe<B> =>
   isMaybeDefined(maybeT) ? f(maybeT) : maybeT;
 
+const getOrElseMaybe = <T>(f: () => T, maybeT: Maybe<T>): T =>
+  isMaybeDefined(maybeT) ? maybeT : f();
+
 const normalizeMaybe = <T>(nullMaybe: T | null) => (nullMaybe === null ? undefined : nullMaybe);
 
 const TRACKING_PARAM = 'ixid';
@@ -34,6 +37,32 @@ export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
   const maybeQuery = mapMaybe(parseQueryString, maybeQueryString);
   return mapMaybe(getTrackingQueryParam, maybeQuery);
 };
+
+const omit = <T>(key: string, obj: Record<string, T>): Record<string, T> => {
+  const copy = { ...obj };
+  delete copy[key];
+  return copy;
+};
+
+const mapQueryForUrl = (fn: (query: Query) => Query) => (url: string) => {
+  const parsedUrl = urlHelpers.parse(url);
+
+  const maybeQueryString = getQueryStringFromParsedUrl(parsedUrl);
+  const query = getOrElseMaybe(() => ({}), mapMaybe(parseQueryString, maybeQueryString));
+
+  const newQuery: Query = fn(query);
+  const newQueryString = queryStringHelpers.stringify(newQuery);
+
+  const newParsedUrl = { ...parsedUrl, search: newQueryString };
+  const newUrl = urlHelpers.format(newParsedUrl);
+
+  return newUrl;
+}
+
+const omitParamFromUrl = (param: string) => (url: string): string =>
+  mapQueryForUrl(query => omit(param, query))(url);
+
+const omitTrackingParamFromUrl = omitParamFromUrl(TRACKING_PARAM);
 
 const sanitize = (str: string | undefined) => {
   if (str === undefined) {
@@ -104,7 +133,7 @@ export const decode = (originalUrl: string) => {
   const property = mapMaybe(emptyStringToUndefined, getIndex(3, values));
 
   return buildTrackingObject({
-    url: originalUrl.replace(new RegExp(`.${TRACKING_PARAM}=${trackingParams}`), ''),
+    url: omitTrackingParamFromUrl(originalUrl),
     app,
     page,
     label,
