@@ -1,6 +1,6 @@
 import base64 = require('base-64');
 
-import { track, decode, _findTrackingParamsInUrl as findTrackingParamsInUrl } from '../src';
+import { _findTrackingParamsInUrl as findTrackingParamsInUrl, decode, track } from '../src';
 
 describe('imgix-trackable', function() {
   describe('#findTrackingParamsInUrl', () => {
