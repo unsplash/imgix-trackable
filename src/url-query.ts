@@ -12,18 +12,24 @@ export const getQueryStringFromParsedUrl = (parsedUrl: urlHelpers.Url): Maybe<st
 
 export type Query = Record<string, string>;
 
-export const parseQueryString = (str: string): Query =>
+export const parseQueryString = (queryParseOptions: queryStringHelpers.ParseOptions) => (
+  str: string,
+): Query =>
   // We cast here to workaround Node typings which incorrectly specify any
-  queryStringHelpers.parse(str) as Query;
+  queryStringHelpers.parse(str, undefined, undefined, queryParseOptions) as Query;
 
 export const mapQueryForUrl = (
   fn: (query: Query) => Query,
   queryStringifyOptions: queryStringHelpers.StringifyOptions,
+  queryParseOptions: queryStringHelpers.ParseOptions,
 ) => (url: string) => {
   const parsedUrl = urlHelpers.parse(url);
 
   const maybeQueryString = getQueryStringFromParsedUrl(parsedUrl);
-  const query = getOrElseMaybe(() => ({}), mapMaybe(parseQueryString, maybeQueryString));
+  const query = getOrElseMaybe(
+    () => ({}),
+    mapMaybe(parseQueryString(queryParseOptions), maybeQueryString),
+  );
 
   const newQuery: Query = fn(query);
   const newQueryString = queryStringHelpers.stringify(
@@ -42,11 +48,13 @@ export const mapQueryForUrl = (
 export const omitQueryParamFromUrl = (
   param: string,
   queryStringifyOptions: queryStringHelpers.StringifyOptions,
+  queryParseOptions: queryStringHelpers.ParseOptions,
 ) => (url: string): string =>
-  mapQueryForUrl(query => omit(param, query), queryStringifyOptions)(url);
+  mapQueryForUrl(query => omit(param, query), queryStringifyOptions, queryParseOptions)(url);
 
 export const setQueryParamForUrl = (
   param: string,
   queryStringifyOptions: queryStringHelpers.StringifyOptions,
+  queryParseOptions: queryStringHelpers.ParseOptions,
 ) => (value: string) => (url: string): string =>
-  mapQueryForUrl(query => set(param, value, query), queryStringifyOptions)(url);
+  mapQueryForUrl(query => set(param, value, query), queryStringifyOptions, queryParseOptions)(url);
