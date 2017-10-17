@@ -13,7 +13,7 @@ export const _findTrackingParamsInUrl = (url: string) => {
   }
 };
 
-const sanitize = (str: string) => {
+const sanitize = (str: string | undefined) => {
   if (!str) {
     return '';
   }
