@@ -59,15 +59,18 @@ const sanitize = (str: string | undefined) => {
 const encodeTrackingOptions = (...args: (string | undefined)[]) =>
   base64.encode(`${args.map(sanitize).join(';')};`);
 
-type TrackingObject = {
-  url: string;
+type TrackingObjectParams = {
   app?: string;
   page?: string;
   label?: string;
   property?: string;
 };
 
-export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) => {
+type TrackingObject = {
+  url: string;
+} & TrackingObjectParams;
+
+export const track = (baseUrl: string, options: TrackingObjectParams = {}) => {
   const { app, page, label, property } = options;
 
   const newTrackingParams = encodeTrackingOptions(app, page, label, property);
