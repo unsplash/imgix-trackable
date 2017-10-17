@@ -38,6 +38,7 @@
       "no-unnecessary-callback-wrapper": true,
       "object-literal-shorthand": true,
       "prefer-switch": true,
+      "prefer-template": true,
       "quotemark": [true, "single"],
       "variable-name": [
           true,

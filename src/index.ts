@@ -25,7 +25,7 @@ const sanitize = (str: string | undefined) => {
 };
 
 const encodeTrackingOptions = (...args: (string | undefined)[]) =>
-  base64.encode(args.map(sanitize).join(';') + ';');
+  base64.encode(`${args.map(sanitize).join(';')};`);
 
 type TrackingObject = {
   url: string;
