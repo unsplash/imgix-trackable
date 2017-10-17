@@ -31,13 +31,6 @@ const parseQueryString = (str: string): Query =>
   queryStringHelpers.parse(str) as Query;
 const getTrackingQueryParam = (query: Query) => getKey(TRACKING_PARAM, query);
 
-export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
-  const parsedUrl = urlHelpers.parse(url);
-  const maybeQueryString = getQueryStringFromParsedUrl(parsedUrl);
-  const maybeQuery = mapMaybe(parseQueryString, maybeQueryString);
-  return mapMaybe(getTrackingQueryParam, maybeQuery);
-};
-
 const omit = <T>(key: string, obj: Record<string, T>): Record<string, T> => {
   const copy = { ...obj };
   delete copy[key];
@@ -75,6 +68,10 @@ const mapQueryForUrl = (
 
 const identity = <T>(t: T) => t;
 
+//
+// End generic helpers
+//
+
 // 1. Opt-out of URI encoding of query param values. imgix requires Base64 encoding, and we handle
 //    this prior to this function call.
 
@@ -89,6 +86,13 @@ const setParamForUrl = (param: string, value: string) => (url: string): string =
     // [1]
     encodeURIComponent: identity,
   })(url);
+
+export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
+  const parsedUrl = urlHelpers.parse(url);
+  const maybeQueryString = getQueryStringFromParsedUrl(parsedUrl);
+  const maybeQuery = mapMaybe(parseQueryString, maybeQueryString);
+  return mapMaybe(getTrackingQueryParam, maybeQuery);
+};
 
 const omitTrackingParamFromUrl = omitParamFromUrl(TRACKING_PARAM);
 
