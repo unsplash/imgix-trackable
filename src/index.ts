@@ -11,8 +11,6 @@ const emptyStringToUndefined = (str: string): string | undefined => (str === '' 
 const getIndex = <X>(index: number, xs: X[]): X | undefined => xs[index];
 const getKey = <X>(index: string, xs: { [key: string]: X }): X | undefined => xs[index];
 
-const TRACKING_PARAM = 'ixid';
-
 const getQueryStringFromParsedUrl = (parsedUrl: urlHelpers.Url): Maybe<string> =>
   normalizeMaybe(
     // We cast here to workaround Node typings which incorrectly specify any
@@ -22,7 +20,6 @@ type Query = Record<string, string>;
 const parseQueryString = (str: string): Query =>
   // We cast here to workaround Node typings which incorrectly specify any
   queryStringHelpers.parse(str) as Query;
-const getTrackingQueryParam = (query: Query) => getKey(TRACKING_PARAM, query);
 
 const omit = <T>(key: string, obj: Record<string, T>): Record<string, T> => {
   const copy = { ...obj };
@@ -76,6 +73,10 @@ const setQueryParamForUrl = (
 //
 // End generic helpers
 //
+
+const TRACKING_PARAM = 'ixid';
+
+const getTrackingQueryParam = (query: Query) => getKey(TRACKING_PARAM, query);
 
 export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
   const parsedUrl = urlHelpers.parse(url);
