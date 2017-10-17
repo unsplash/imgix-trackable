@@ -1,74 +1,15 @@
 import base64 = require('base-64');
-import queryStringHelpers = require('querystring');
 import urlHelpers = require('url');
 
-import { getOrElseMaybe, mapMaybe, Maybe, normalizeMaybe } from './maybe';
-
-const emptyStringToUndefined = (str: string): string | undefined => (str === '' ? undefined : str);
-
-// TS doesn't return the correct type for array and object index signatures. It returns `T` instead
-// of `T | undefined`. These helpers give us the correct type.
-const getIndex = <X>(index: number, xs: X[]): X | undefined => xs[index];
-const getKey = <X>(index: string, xs: { [key: string]: X }): X | undefined => xs[index];
-
-const getQueryStringFromParsedUrl = (parsedUrl: urlHelpers.Url): Maybe<string> =>
-  normalizeMaybe(
-    // We cast here to workaround Node typings which incorrectly specify any
-    parsedUrl.query as null | string,
-  );
-type Query = Record<string, string>;
-const parseQueryString = (str: string): Query =>
-  // We cast here to workaround Node typings which incorrectly specify any
-  queryStringHelpers.parse(str) as Query;
-
-const omit = <T>(key: string, obj: Record<string, T>): Record<string, T> => {
-  const copy = { ...obj };
-  delete copy[key];
-  return copy;
-};
-
-const set = <T>(key: string, value: T, obj: Record<string, T>): Record<string, T> => {
-  const copy = { ...obj };
-  copy[key] = value;
-  return copy;
-};
-
-const mapQueryForUrl = (
-  fn: (query: Query) => Query,
-  queryStringifyOptions: queryStringHelpers.StringifyOptions,
-) => (url: string) => {
-  const parsedUrl = urlHelpers.parse(url);
-
-  const maybeQueryString = getQueryStringFromParsedUrl(parsedUrl);
-  const query = getOrElseMaybe(() => ({}), mapMaybe(parseQueryString, maybeQueryString));
-
-  const newQuery: Query = fn(query);
-  const newQueryString = queryStringHelpers.stringify(
-    newQuery,
-    undefined,
-    undefined,
-    queryStringifyOptions,
-  );
-
-  const newParsedUrl = { ...parsedUrl, search: newQueryString };
-  const newUrl = urlHelpers.format(newParsedUrl);
-
-  return newUrl;
-};
-
-const identity = <T>(t: T) => t;
-
-const omitQueryParamFromUrl = (
-  param: string,
-  queryStringifyOptions: queryStringHelpers.StringifyOptions,
-) => (url: string): string =>
-  mapQueryForUrl(query => omit(param, query), queryStringifyOptions)(url);
-
-const setQueryParamForUrl = (
-  param: string,
-  queryStringifyOptions: queryStringHelpers.StringifyOptions,
-) => (value: string) => (url: string): string =>
-  mapQueryForUrl(query => set(param, value, query), queryStringifyOptions)(url);
+import { emptyStringToUndefined, getIndex, getKey, identity } from './helpers';
+import { mapMaybe, Maybe } from './maybe';
+import {
+  getQueryStringFromParsedUrl,
+  omitQueryParamFromUrl,
+  parseQueryString,
+  Query,
+  setQueryParamForUrl,
+} from './url-query';
 
 //
 // End generic helpers
