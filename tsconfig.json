@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitReturns": true,
+    "module": "commonjs",
+    "plugins": [{ "name": "tslint-language-service" }]
+  }
+}

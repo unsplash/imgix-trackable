@@ -1,50 +1,48 @@
-const base64 = require('base-64');
+import base64 = require('base-64');
 
-describe("imgix-trackable", function() {
-  const track = require('../lib').track;
-  const decode = require('../lib').decode;
-  const findTrackingParamsInUrl = require('../lib')._findTrackingParamsInUrl;
+import { _findTrackingParamsInUrl as findTrackingParamsInUrl, decode, track } from '../src';
 
-  describe("#findTrackingParamsInUrl", () => {
-    it("", () => {
-      const url = "https://images.unsplash.com/photo-123?w=200&ixid=asdkasdkahsdhasd==&dog=true";
+describe('imgix-trackable', function() {
+  describe('#findTrackingParamsInUrl', () => {
+    it('', () => {
+      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=asdkasdkahsdhasd==&dog=true';
 
-      expect(findTrackingParamsInUrl(url)).toEqual("ixid=asdkasdkahsdhasd==");
+      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
     });
 
-    it("", () => {
-      const url = "https://images.unsplash.com/photo-123?w=200&ixid=asdkasdkahsdhasd==";
+    it('', () => {
+      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=asdkasdkahsdhasd==';
 
-      expect(findTrackingParamsInUrl(url)).toEqual("ixid=asdkasdkahsdhasd==");
+      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
     });
 
-    it("", () => {
-      const url = "https://images.unsplash.com/photo-123?ixid=asdkasdkahsdhasd==&w=200";
+    it('', () => {
+      const url = 'https://images.unsplash.com/photo-123?ixid=asdkasdkahsdhasd==&w=200';
 
-      expect(findTrackingParamsInUrl(url)).toEqual("ixid=asdkasdkahsdhasd==");
+      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
     });
 
-    it("", () => {
-      const url = "https://images.unsplash.com/photo-123?ixid=asdkasdkahsdhasd==";
+    it('', () => {
+      const url = 'https://images.unsplash.com/photo-123?ixid=asdkasdkahsdhasd==';
 
-      expect(findTrackingParamsInUrl(url)).toEqual("ixid=asdkasdkahsdhasd==");
+      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
     });
 
-    it("", () => {
-      const url = "https://images.unsplash.com/photo-123?w=200";
+    it('', () => {
+      const url = 'https://images.unsplash.com/photo-123?w=200';
 
-      expect(findTrackingParamsInUrl(url)).toEqual("");
+      expect(findTrackingParamsInUrl(url)).toEqual('');
     });
 
-    it("", () => {
-      const url = "https://images.unsplash.com/photo-123?w=200&ixid=&dog=true";
+    it('', () => {
+      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=&dog=true';
 
-      expect(findTrackingParamsInUrl(url)).toEqual("ixid=");
+      expect(findTrackingParamsInUrl(url)).toEqual('ixid=');
     });
   });
 
-  describe("#track", () => {
-    it("encodes the tracking options in base 64", () => {
+  describe('#track', () => {
+    it('encodes the tracking options in base 64', () => {
       const baseUrl = 'https://images.unsplash.com/photo-123';
       const app = 'my-app';
       const page = 'search';
@@ -55,7 +53,7 @@ describe("imgix-trackable", function() {
         app,
         page,
         label,
-        property
+        property,
       });
 
       const encodedValues = trackedUrl.split('ixid=')[1];
@@ -64,7 +62,7 @@ describe("imgix-trackable", function() {
       expect(decodedValues).toEqual(`my-app;search;dog;5;`);
     });
 
-    it("dasherizes the tracking options", () => {
+    it('dasherizes the tracking options', () => {
       const baseUrl = 'https://images.unsplash.com/photo-123';
       const app = 'my app';
       const page = 'search';
@@ -75,7 +73,7 @@ describe("imgix-trackable", function() {
         app,
         page,
         label,
-        property
+        property,
       });
 
       const encodedValues = trackedUrl.split('ixid=')[1];
@@ -84,7 +82,7 @@ describe("imgix-trackable", function() {
       expect(decodedValues).toEqual(`my-app;search;new-york;5;`);
     });
 
-    it("lowercases the tracking options", () => {
+    it('lowercases the tracking options', () => {
       const baseUrl = 'https://images.unsplash.com/photo-123';
       const app = 'MY App';
       const page = 'search';
@@ -95,7 +93,7 @@ describe("imgix-trackable", function() {
         app,
         page,
         label,
-        property
+        property,
       });
 
       const encodedValues = trackedUrl.split('ixid=')[1];
@@ -104,8 +102,8 @@ describe("imgix-trackable", function() {
       expect(decodedValues).toEqual(`my-app;search;dog;5;`);
     });
 
-    describe("when the URL has no params", () => {
-      it("should add the ixid param", function() {
+    describe('when the URL has no params', () => {
+      it('should add the ixid param', function() {
         const baseUrl = 'https://images.unsplash.com/photo-123';
         const trackedUrl = track(baseUrl, { app: 'my-app' });
 
@@ -113,8 +111,8 @@ describe("imgix-trackable", function() {
       });
     });
 
-    describe("when the URL has params", () => {
-      it("should add the ixid param", function() {
+    describe('when the URL has params', () => {
+      it('should add the ixid param', function() {
         const baseUrl = 'https://images.unsplash.com/photo-123?w=200';
         const trackedUrl = track(baseUrl, { app: 'my-app' });
 
@@ -123,8 +121,8 @@ describe("imgix-trackable", function() {
       });
     });
 
-    describe("when the URL already has a tracklable param", () => {
-      it("should override the ixid param", function() {
+    describe('when the URL already has a tracklable param', () => {
+      it('should override the ixid param', function() {
         const baseUrl = 'https://images.unsplash.com/photo-123?w=200&ixid=456';
         const trackedUrl = track(baseUrl, { app: 'my-app' });
 
@@ -134,15 +132,15 @@ describe("imgix-trackable", function() {
     });
   });
 
-  describe("#decode", () => {
-    it("splits the URL back into its tracking components", () => {
+  describe('#decode', () => {
+    it('splits the URL back into its tracking components', () => {
       // URL: 'https://images.unsplash.com/photo-123?w=200&ixid=...
       // Options:
       //   - app: 'my-app'
       //   - page: ''
       //   - label: ''
       //   - property: ''
-      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwOzs7Ow=='
+      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwOzs7Ow==';
 
       const tracklableObject = decode(url);
 
@@ -153,14 +151,14 @@ describe("imgix-trackable", function() {
       expect(tracklableObject.property).toEqual(undefined);
     });
 
-    it("splits the URL back into its tracking components", () => {
+    it('splits the URL back into its tracking components', () => {
       // URL: https://images.unsplash.com/photo-123?w=200?ixid=...
       // Options:
       //   - app: 'my-app'
       //   - page: 'search'
       //   - label: 'dog'
       //   - property: '5'
-      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwO3NlYXJjaDtkb2c7NTs='
+      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwO3NlYXJjaDtkb2c7NTs=';
 
       const tracklableObject = decode(url);
 
@@ -171,7 +169,7 @@ describe("imgix-trackable", function() {
       expect(tracklableObject.property).toEqual('5');
     });
 
-    it("splits the URL back into its tracking components", () => {
+    it('splits the URL back into its tracking components', () => {
       // URL: https://images.unsplash.com/photo-123?w=200&ixid=...&h=300
       // Options:
       //   - app: 'my-app'
