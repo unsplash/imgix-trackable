@@ -13,10 +13,12 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "npm run build:spec && jasmine",
+    "test": "npm run lint:spec && npm run build:spec && jasmine",
+    "lint:src": "tslint --project ./src",
+    "lint:spec": "tslint --project ./spec",
     "build:src": "tsc --project ./src --outDir ./target-src",
     "build:spec": "tsc --project ./spec --outDir ./target-spec",
-    "prepublish": "npm run build:src",
+    "prepublish": "npm run lint:src && npm run build:src",
     "publish:major": "npm run prepublish && npm version major",
     "publish:minor": "npm run prepublish && npm version minor",
     "publish:patch": "npm run prepublish && npm version patch",
@@ -37,6 +39,7 @@
     "@types/jasmine": "^2.6.0",
     "jasmine": "^2.8.0",
     "prettier": "^1.7.4",
+    "tslint": "^5.7.0",
     "typescript": "^2.5.3"
   }
 }
