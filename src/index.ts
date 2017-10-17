@@ -12,10 +12,6 @@ import {
   setQueryParamForUrl,
 } from './url-query';
 
-//
-// End generic helpers
-//
-
 const TRACKING_PARAM = 'ixid';
 
 const getTrackingQueryParam = (query: Query) => getKey(TRACKING_PARAM, query);
