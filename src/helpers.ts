@@ -1,4 +1,5 @@
-export const emptyStringToUndefined = (str: string): string | undefined => (str === '' ? undefined : str);
+export const emptyStringToUndefined = (str: string): string | undefined =>
+  str === '' ? undefined : str;
 
 // TS doesn't return the correct type for array and object index signatures. It returns `T` instead
 // of `T | undefined`. These helpers give us the correct type.

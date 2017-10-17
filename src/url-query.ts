@@ -25,10 +25,9 @@ export const parseQueryString = (queryParseOptions: queryStringHelpers.ParseOpti
   // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/20651
   queryStringHelpers.parse(str, undefined, undefined, queryParseOptions) as Query;
 
-export const mapQueryForUrl = (
-  fn: (query: Query) => Query,
-  queryOptions: QueryOptions,
-) => (url: string) => {
+export const mapQueryForUrl = (fn: (query: Query) => Query, queryOptions: QueryOptions) => (
+  url: string,
+) => {
   const { queryParseOptions, queryStringifyOptions } = queryOptions;
 
   const parsedUrl = urlHelpers.parse(url);
@@ -53,13 +52,10 @@ export const mapQueryForUrl = (
   return newUrl;
 };
 
-export const omitQueryParamFromUrl = (
-  param: string,
-  queryOptions: QueryOptions,
-) => (url: string): string => mapQueryForUrl(query => omit(param, query), queryOptions)(url);
+export const omitQueryParamFromUrl = (param: string, queryOptions: QueryOptions) => (
+  url: string,
+): string => mapQueryForUrl(query => omit(param, query), queryOptions)(url);
 
-export const setQueryParamForUrl = (
-  param: string,
-  queryOptions: QueryOptions,
-) => (value: string) => (url: string): string =>
-  mapQueryForUrl(query => set(param, value, query), queryOptions)(url);
+export const setQueryParamForUrl = (param: string, queryOptions: QueryOptions) => (
+  value: string,
+) => (url: string): string => mapQueryForUrl(query => set(param, value, query), queryOptions)(url);
