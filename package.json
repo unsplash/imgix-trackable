@@ -23,6 +23,9 @@
     "format": "prettier --write '{src,spec}/**/*.js'"
   },
   "main": "target-src/index.js",
+  "files": [
+    "target-src"
+  ],
   "keywords": [
     "imgix"
   ],
