@@ -1,7 +1,7 @@
 import base64 = require('base-64');
 import urlHelpers = require('url');
 
-import { emptyStringToUndefined, getIndex, getKey, identity } from './helpers';
+import { emptyStringToUndefined, getIndex, getKey, getValues, identity } from './helpers';
 import { mapMaybe, Maybe } from './maybe';
 import {
   getQueryStringFromParsedUrl,
@@ -56,8 +56,12 @@ const sanitize = (str: string | undefined) => {
     .toLowerCase();
 };
 
-const encodeTrackingOptions = (...args: (string | undefined)[]) =>
-  base64.encode(`${args.map(sanitize).join(';')};`);
+const encodeTrackingOptions = (options: TrackingObjectParams) =>
+  base64.encode(
+    `${getValues(options)
+      .map(sanitize)
+      .join(';')};`,
+  );
 
 type TrackingObjectParams = {
   app?: string;
@@ -70,10 +74,8 @@ type TrackingObject = {
   url: string;
 } & TrackingObjectParams;
 
-export const track = (baseUrl: string, options: TrackingObjectParams = {}) => {
-  const { app, page, label, property } = options;
-
-  const newTrackingParams = encodeTrackingOptions(app, page, label, property);
+export const track = (baseUrl: string, options: TrackingObjectParams) => {
+  const newTrackingParams = encodeTrackingOptions(options);
   return setTrackingParamForUrl(newTrackingParams)(baseUrl);
 };
 

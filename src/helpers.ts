@@ -19,3 +19,10 @@ export const set = <T>(key: string, value: T, obj: Record<string, T>): Record<st
 };
 
 export const identity = <T>(t: T) => t;
+
+export const getValues = <V>(obj: Record<string, V>): V[] =>
+  Object.keys(obj).reduce((acc, key) => {
+    const maybeValue = getKey(key, obj);
+    const value = maybeValue!;
+    return [...acc, value];
+  }, []);
