@@ -32,10 +32,7 @@ export const _findTrackingParamsInUrl = (url: string): string => {
   const maybeQuery = mapMaybe(parseQueryString, maybeQueryString);
   return getOrElseMaybe(
     () => '',
-    mapMaybe(
-      s => `${TRACKING_PARAM}=${s}`,
-      mapMaybe(query => getKey(TRACKING_PARAM, query), maybeQuery),
-    ),
+    mapMaybe(query => getKey(TRACKING_PARAM, query), maybeQuery),
   );
 };
 
@@ -73,12 +70,12 @@ const buildTrackingObject = ({ url, app, page, label, property }: Partial<Tracki
 export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) => {
   const { app, page, label, property } = options;
 
-  const newTrackingParams = `${TRACKING_PARAM}=${encodeTrackingOptions(
+  const newTrackingParams = encodeTrackingOptions(
     app,
     page,
     label,
     property,
-  )}`;
+  );
   const existingTrackParams = _findTrackingParamsInUrl(baseUrl);
 
   if (existingTrackParams !== '') {
@@ -87,7 +84,7 @@ export const track = (baseUrl: string, options: Partial<TrackingObject> = {}) =>
     const hasParams = baseUrl.split('?').length >= 2;
     const joinOperator = hasParams ? '&' : '?';
 
-    return baseUrl + joinOperator + newTrackingParams;
+    return baseUrl + joinOperator + `${TRACKING_PARAM}=${newTrackingParams}`;
   }
 };
 
@@ -100,7 +97,7 @@ export const decode = (originalUrl: string) => {
     return buildTrackingObject({ url: originalUrl });
   }
 
-  const encodedValues = trackingParams.split(`${TRACKING_PARAM}=`)[1];
+  const encodedValues = trackingParams;
   const decodedValues = base64.decode(encodedValues);
   const values = decodedValues.split(';');
 
@@ -110,7 +107,7 @@ export const decode = (originalUrl: string) => {
   const property = emptyStringToUndefined(values[3]);
 
   return buildTrackingObject({
-    url: originalUrl.replace(new RegExp(`.${trackingParams}`), ''),
+    url: originalUrl.replace(new RegExp(`.${TRACKING_PARAM}=${trackingParams}`), ''),
     app,
     page,
     label,

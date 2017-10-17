@@ -7,25 +7,25 @@ describe('imgix-trackable', function() {
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?w=200&ixid=asdkasdkahsdhasd==&dog=true';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
+      expect(findTrackingParamsInUrl(url)).toEqual('asdkasdkahsdhasd==');
     });
 
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?w=200&ixid=asdkasdkahsdhasd==';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
+      expect(findTrackingParamsInUrl(url)).toEqual('asdkasdkahsdhasd==');
     });
 
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?ixid=asdkasdkahsdhasd==&w=200';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
+      expect(findTrackingParamsInUrl(url)).toEqual('asdkasdkahsdhasd==');
     });
 
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?ixid=asdkasdkahsdhasd==';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
+      expect(findTrackingParamsInUrl(url)).toEqual('asdkasdkahsdhasd==');
     });
 
     it('', () => {
@@ -37,7 +37,7 @@ describe('imgix-trackable', function() {
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?w=200&ixid=&dog=true';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('ixid=');
+      expect(findTrackingParamsInUrl(url)).toEqual('');
     });
   });
 
