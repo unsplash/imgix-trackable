@@ -7,6 +7,7 @@ import { getOrElseMaybe, mapMaybe, Maybe, normalizeMaybe } from './maybe';
 export const getQueryStringFromParsedUrl = (parsedUrl: urlHelpers.Url): Maybe<string> =>
   normalizeMaybe(
     // We cast here to workaround Node typings which incorrectly specify any
+    // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/20650
     parsedUrl.query as null | string,
   );
 
@@ -21,6 +22,7 @@ export const parseQueryString = (queryParseOptions: queryStringHelpers.ParseOpti
   str: string,
 ): Query =>
   // We cast here to workaround Node typings which incorrectly specify any
+  // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/20651
   queryStringHelpers.parse(str, undefined, undefined, queryParseOptions) as Query;
 
 export const mapQueryForUrl = (
