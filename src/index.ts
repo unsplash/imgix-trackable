@@ -17,10 +17,10 @@ const normalizeMaybe = <T>(nullMaybe: T | null) => (nullMaybe === null ? undefin
 
 const TRACKING_PARAM = 'ixid';
 
-const getQueryStringFromUrl = (str: string): Maybe<string> =>
+const getQueryStringFromParsedUrl = (parsedUrl: urlHelpers.Url): Maybe<string> =>
   normalizeMaybe(
     // We cast here to workaround Node typings which incorrectly specify any
-    urlHelpers.parse(str).query as null | string,
+    parsedUrl.query as null | string,
   );
 type Query = Record<string, string>;
 const parseQueryString = (str: string): Query =>
@@ -29,7 +29,8 @@ const parseQueryString = (str: string): Query =>
 const getTrackingQueryParam = (query: Query) => getKey(TRACKING_PARAM, query);
 
 export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
-  const maybeQueryString = getQueryStringFromUrl(url);
+  const parsedUrl = urlHelpers.parse(url);
+  const maybeQueryString = getQueryStringFromParsedUrl(parsedUrl);
   const maybeQuery = mapMaybe(parseQueryString, maybeQueryString);
   return mapMaybe(getTrackingQueryParam, maybeQuery);
 };
