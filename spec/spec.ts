@@ -186,5 +186,17 @@ describe('imgix-trackable', function() {
       expect(tracklableObject.label).toEqual(undefined);
       expect(tracklableObject.property).toEqual(undefined);
     });
+
+    it('given a URL without a tracking param, it splits the URL back into its tracking components', () => {
+      const url = 'https://images.unsplash.com/photo-123?w=200&h=300';
+
+      const tracklableObject = decode(url);
+
+      expect(tracklableObject.url).toEqual('https://images.unsplash.com/photo-123?w=200&h=300');
+      expect(tracklableObject.app).toEqual(undefined);
+      expect(tracklableObject.page).toEqual(undefined);
+      expect(tracklableObject.label).toEqual(undefined);
+      expect(tracklableObject.property).toEqual(undefined);
+    });
   });
 });
