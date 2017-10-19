@@ -11,7 +11,7 @@ export const getQueryStringFromParsedUrl = (parsedUrl: urlHelpers.Url): Maybe<st
     parsedUrl.query as null | string,
   );
 
-export type Query = Record<string, string>;
+export type Query = Record<string, string | string[]>;
 
 export type QueryOptions = {
   queryStringifyOptions: queryStringHelpers.StringifyOptions;

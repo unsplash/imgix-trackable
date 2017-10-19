@@ -14,7 +14,8 @@ import {
 
 const TRACKING_PARAM = 'ixid';
 
-const getTrackingQueryParam = (query: Query) => getKey(TRACKING_PARAM, query);
+const getTrackingQueryParam = (query: Query): Maybe<string> =>
+  mapMaybe(x => (typeof x === 'string' ? x : getIndex(0, x)), getKey(TRACKING_PARAM, query));
 
 export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
   const parsedUrl = urlHelpers.parse(url);
