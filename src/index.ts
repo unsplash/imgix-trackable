@@ -1,4 +1,5 @@
 import base64 = require('base-64');
+import queryStringHelpers = require('querystring');
 import urlHelpers = require('url');
 
 import { emptyStringToUndefined, getIndex, getKey, getValues, identity } from './helpers';
@@ -6,7 +7,6 @@ import { mapMaybe, Maybe } from './maybe';
 import {
   getQueryStringFromParsedUrl,
   omitQueryParamFromUrl,
-  parseQueryString,
   Query,
   QueryOptions,
   setQueryParamForUrl,
@@ -20,7 +20,10 @@ const getTrackingQueryParam = (query: Query): Maybe<string> =>
 export const _findTrackingParamsInUrl = (url: string): Maybe<string> => {
   const parsedUrl = urlHelpers.parse(url);
   const maybeQueryString = getQueryStringFromParsedUrl(parsedUrl);
-  const maybeQuery = mapMaybe(parseQueryString({ decodeURIComponent: identity }), maybeQueryString);
+  const maybeQuery = mapMaybe(
+    str => queryStringHelpers.parse(str, undefined, undefined, { decodeURIComponent: identity }),
+    maybeQueryString,
+  );
   return mapMaybe(getTrackingQueryParam, maybeQuery);
 };
 

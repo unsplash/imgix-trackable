@@ -18,13 +18,6 @@ export type QueryOptions = {
   queryParseOptions: queryStringHelpers.ParseOptions;
 };
 
-export const parseQueryString = (queryParseOptions: queryStringHelpers.ParseOptions) => (
-  str: string,
-): Query =>
-  // We cast here to workaround Node typings which incorrectly specify any
-  // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/20651
-  queryStringHelpers.parse(str, undefined, undefined, queryParseOptions) as Query;
-
 export const mapQueryForUrl = (fn: (query: Query) => Query, queryOptions: QueryOptions) => (
   url: string,
 ) => {
@@ -35,7 +28,10 @@ export const mapQueryForUrl = (fn: (query: Query) => Query, queryOptions: QueryO
   const maybeQueryString = getQueryStringFromParsedUrl(parsedUrl);
   const query = getOrElseMaybe(
     () => ({}),
-    mapMaybe(parseQueryString(queryParseOptions), maybeQueryString),
+    mapMaybe(
+      str => queryStringHelpers.parse(str, undefined, undefined, queryParseOptions),
+      maybeQueryString,
+    ),
   );
 
   const newQuery: Query = fn(query);
