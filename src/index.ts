@@ -66,7 +66,7 @@ export const encodeTrackingOptions = (options: TrackingObjectParams) =>
       .join(';')};`,
   );
 
-type TrackingObjectParams = {
+export type TrackingObjectParams = {
   app?: string;
   page?: string;
   label?: string;
