@@ -13,11 +13,10 @@ export const omit = <T>(key: string, obj: Record<string, T>): Record<string, T> 
   return copy;
 };
 
-export const set = <T>(key: string, value: T, obj: Record<string, T>): Record<string, T> => {
-  const copy = { ...obj };
-  copy[key] = value;
-  return copy;
-};
+export const set = <T>(key: string, value: T, obj: Record<string, T>): Record<string, T> => ({
+  ...obj,
+  [key]: value,
+});
 
 export const identity = <T>(t: T) => t;
 
