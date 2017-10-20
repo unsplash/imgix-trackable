@@ -1,4 +1,4 @@
-import queryStringHelpers = require('querystring');
+import * as queryStringHelpers from 'querystring';
 import * as urlHelpers from 'url';
 
 import { omit, set } from './helpers';
