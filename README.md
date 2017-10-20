@@ -68,7 +68,12 @@ A more specific identifier for the page. (optional)
 Type: `string`<br>
 Default: `null`
 
-An additional identifier, like the position on the page. (optional)
+##### userId
+
+Type: `string`<br>
+Default: `null`
+
+The user ID.
 
 ### decode(url)
 
