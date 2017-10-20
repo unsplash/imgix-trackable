@@ -37,6 +37,7 @@
   "devDependencies": {
     "@types/base-64": "^0.1.2",
     "@types/jasmine": "^2.6.0",
+    "@types/node": "^8.0.41",
     "jasmine": "^2.8.0",
     "prettier": "^1.7.4",
     "tslint": "^5.7.0",

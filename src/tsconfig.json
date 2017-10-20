@@ -1,7 +1,10 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["@types/base-64"]
+    "types": [
+      "@types/base-64",
+      "@types/node"
+    ]
   },
   "files": [
     "./index.ts"

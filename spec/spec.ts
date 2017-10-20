@@ -7,37 +7,37 @@ describe('imgix-trackable', function() {
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?w=200&ixid=asdkasdkahsdhasd==&dog=true';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
+      expect(findTrackingParamsInUrl(url)).toEqual('asdkasdkahsdhasd==');
     });
 
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?w=200&ixid=asdkasdkahsdhasd==';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
+      expect(findTrackingParamsInUrl(url)).toEqual('asdkasdkahsdhasd==');
     });
 
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?ixid=asdkasdkahsdhasd==&w=200';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
+      expect(findTrackingParamsInUrl(url)).toEqual('asdkasdkahsdhasd==');
     });
 
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?ixid=asdkasdkahsdhasd==';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('ixid=asdkasdkahsdhasd==');
+      expect(findTrackingParamsInUrl(url)).toEqual('asdkasdkahsdhasd==');
     });
 
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?w=200';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('');
+      expect(findTrackingParamsInUrl(url)).toEqual(undefined);
     });
 
     it('', () => {
       const url = 'https://images.unsplash.com/photo-123?w=200&ixid=&dog=true';
 
-      expect(findTrackingParamsInUrl(url)).toEqual('ixid=');
+      expect(findTrackingParamsInUrl(url)).toEqual('');
     });
   });
 
@@ -182,6 +182,18 @@ describe('imgix-trackable', function() {
 
       expect(tracklableObject.url).toEqual('https://images.unsplash.com/photo-123?w=200&h=300');
       expect(tracklableObject.app).toEqual('my-app');
+      expect(tracklableObject.page).toEqual(undefined);
+      expect(tracklableObject.label).toEqual(undefined);
+      expect(tracklableObject.property).toEqual(undefined);
+    });
+
+    it('given a URL without a tracking param, it splits the URL back into its tracking components', () => {
+      const url = 'https://images.unsplash.com/photo-123?w=200&h=300';
+
+      const tracklableObject = decode(url);
+
+      expect(tracklableObject.url).toEqual('https://images.unsplash.com/photo-123?w=200&h=300');
+      expect(tracklableObject.app).toEqual(undefined);
       expect(tracklableObject.page).toEqual(undefined);
       expect(tracklableObject.label).toEqual(undefined);
       expect(tracklableObject.property).toEqual(undefined);
