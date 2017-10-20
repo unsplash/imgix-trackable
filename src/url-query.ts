@@ -1,5 +1,5 @@
 import queryStringHelpers = require('querystring');
-import urlHelpers = require('url');
+import * as urlHelpers from 'url';
 
 import { omit, set } from './helpers';
 import { getOrElseMaybe, mapMaybe, Maybe, normalizeMaybe } from './maybe';
