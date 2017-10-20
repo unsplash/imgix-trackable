@@ -59,7 +59,7 @@ const sanitize = (str: string | undefined) => {
     .toLowerCase();
 };
 
-const encodeTrackingOptions = (options: TrackingObjectParams) =>
+export const encodeTrackingOptions = (options: TrackingObjectParams) =>
   base64.encode(
     `${getValues(options)
       .map(sanitize)
