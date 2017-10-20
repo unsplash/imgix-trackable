@@ -108,6 +108,42 @@ describe('imgix-trackable', function() {
       expect(decodedValues).toEqual(`my-app;search;dog;5;6;`);
     });
 
+    it('handles undefined values', () => {
+      const baseUrl = 'https://images.unsplash.com/photo-123';
+      const app = 'MY App';
+      const page = undefined;
+      const label = undefined;
+      const property = undefined;
+      const userId = undefined;
+
+      const trackedUrl = track(baseUrl, {
+        app,
+        page,
+        label,
+        property,
+        userId,
+      });
+
+      const encodedValues = trackedUrl.split('ixid=')[1];
+      const decodedValues = base64.decode(encodedValues);
+
+      expect(decodedValues).toEqual(`my-app;;;;;`);
+    });
+
+    it('handles missing values', () => {
+      const baseUrl = 'https://images.unsplash.com/photo-123';
+      const app = 'MY App';
+
+      const trackedUrl = track(baseUrl, {
+        app,
+      });
+
+      const encodedValues = trackedUrl.split('ixid=')[1];
+      const decodedValues = base64.decode(encodedValues);
+
+      expect(decodedValues).toEqual(`my-app;;;;;`);
+    });
+
     describe('when the URL has no params', () => {
       it('should add the ixid param', function() {
         const baseUrl = 'https://images.unsplash.com/photo-123';

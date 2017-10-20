@@ -59,27 +59,41 @@ const sanitize = (str: string | undefined) => {
     .toLowerCase();
 };
 
-export const encodeTrackingOptions = (options: TrackingObjectParams) =>
+export const encodeTrackingOptions = (options: RequiredTrackingObjectParams) =>
   base64.encode(
     `${getValues(options)
       .map(sanitize)
       .join(';')};`,
   );
 
-export type TrackingObjectParams = {
-  app?: string;
-  page?: string;
-  label?: string;
-  property?: string;
-  userId?: string;
+export type RequiredTrackingObjectParams = {
+  app: Maybe<string>;
+  page: Maybe<string>;
+  label: Maybe<string>;
+  property: Maybe<string>;
+  userId: Maybe<string>;
 };
+
+const defaults: RequiredTrackingObjectParams = {
+  app: undefined,
+  page: undefined,
+  label: undefined,
+  property: undefined,
+  userId: undefined,
+};
+
+export type InputTrackingObjectParams = Partial<RequiredTrackingObjectParams>;
 
 type TrackingObject = {
   url: string;
-} & TrackingObjectParams;
+} & InputTrackingObjectParams;
 
-export const track = (baseUrl: string, options: TrackingObjectParams) => {
-  const newTrackingParams = encodeTrackingOptions(options);
+export const track = (baseUrl: string, options: InputTrackingObjectParams) => {
+  const optionsWithDefaults: RequiredTrackingObjectParams = {
+    ...defaults,
+    ...options,
+  };
+  const newTrackingParams = encodeTrackingOptions(optionsWithDefaults);
   return setTrackingParamForUrl(newTrackingParams)(baseUrl);
 };
 
