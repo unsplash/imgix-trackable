@@ -25,6 +25,7 @@
     "format": "prettier --write '{src,spec}/**/*.ts'"
   },
   "main": "target-src/index.js",
+  "types": "target-src/index.d.ts",
   "files": [
     "target-src"
   ],
