@@ -71,6 +71,7 @@ type TrackingObjectParams = {
   page?: string;
   label?: string;
   property?: string;
+  userId?: string;
 };
 
 type TrackingObject = {
@@ -98,6 +99,7 @@ export const decode = (originalUrl: string): TrackingObject => {
   const page = mapMaybe(emptyStringToUndefined, getIndex(1, values));
   const label = mapMaybe(emptyStringToUndefined, getIndex(2, values));
   const property = mapMaybe(emptyStringToUndefined, getIndex(3, values));
+  const userId = mapMaybe(emptyStringToUndefined, getIndex(4, values));
 
   return {
     url,
@@ -105,5 +107,6 @@ export const decode = (originalUrl: string): TrackingObject => {
     page,
     label,
     property,
+    userId,
   };
 };

@@ -48,18 +48,20 @@ describe('imgix-trackable', function() {
       const page = 'search';
       const label = 'dog';
       const property = '5';
+      const userId = '6';
 
       const trackedUrl = track(baseUrl, {
         app,
         page,
         label,
         property,
+        userId,
       });
 
       const encodedValues = trackedUrl.split('ixid=')[1];
       const decodedValues = base64.decode(encodedValues);
 
-      expect(decodedValues).toEqual(`my-app;search;dog;5;`);
+      expect(decodedValues).toEqual(`my-app;search;dog;5;6;`);
     });
 
     it('dasherizes the tracking options', () => {
@@ -68,18 +70,20 @@ describe('imgix-trackable', function() {
       const page = 'search';
       const label = 'new york';
       const property = '5';
+      const userId = '6';
 
       const trackedUrl = track(baseUrl, {
         app,
         page,
         label,
         property,
+        userId,
       });
 
       const encodedValues = trackedUrl.split('ixid=')[1];
       const decodedValues = base64.decode(encodedValues);
 
-      expect(decodedValues).toEqual(`my-app;search;new-york;5;`);
+      expect(decodedValues).toEqual(`my-app;search;new-york;5;6;`);
     });
 
     it('lowercases the tracking options', () => {
@@ -88,18 +92,20 @@ describe('imgix-trackable', function() {
       const page = 'search';
       const label = 'Dog';
       const property = '5';
+      const userId = '6';
 
       const trackedUrl = track(baseUrl, {
         app,
         page,
         label,
         property,
+        userId,
       });
 
       const encodedValues = trackedUrl.split('ixid=')[1];
       const decodedValues = base64.decode(encodedValues);
 
-      expect(decodedValues).toEqual(`my-app;search;dog;5;`);
+      expect(decodedValues).toEqual(`my-app;search;dog;5;6;`);
     });
 
     describe('when the URL has no params', () => {
@@ -133,14 +139,15 @@ describe('imgix-trackable', function() {
   });
 
   describe('#decode', () => {
-    it('splits the URL back into its tracking components', () => {
+    it('given a value without user ID, splits the URL back into its tracking components', () => {
       // URL: 'https://images.unsplash.com/photo-123?w=200&ixid=...
       // Options:
-      //   - app: 'my-app'
-      //   - page: ''
-      //   - label: ''
-      //   - property: ''
-      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwOzs7Ow==';
+      const app = 'my-app';
+      const page = '';
+      const label = '';
+      const property = '';
+      const encoded = base64.encode(`${app};${page};${label};${property};`);
+      const url = `https://images.unsplash.com/photo-123?w=200&ixid=${encoded}`;
 
       const tracklableObject = decode(url);
 
@@ -149,16 +156,40 @@ describe('imgix-trackable', function() {
       expect(tracklableObject.page).toEqual(undefined);
       expect(tracklableObject.label).toEqual(undefined);
       expect(tracklableObject.property).toEqual(undefined);
+      expect(tracklableObject.userId).toEqual(undefined);
+    });
+
+    it('splits the URL back into its tracking components', () => {
+      // URL: 'https://images.unsplash.com/photo-123?w=200&ixid=...
+      // Options:
+      const app = 'my-app';
+      const page = '';
+      const label = '';
+      const property = '';
+      const userId = '';
+      const encoded = base64.encode(`${app};${page};${label};${property};${userId};`);
+      const url = `https://images.unsplash.com/photo-123?w=200&ixid=${encoded}`;
+
+      const tracklableObject = decode(url);
+
+      expect(tracklableObject.url).toEqual('https://images.unsplash.com/photo-123?w=200');
+      expect(tracklableObject.app).toEqual('my-app');
+      expect(tracklableObject.page).toEqual(undefined);
+      expect(tracklableObject.label).toEqual(undefined);
+      expect(tracklableObject.property).toEqual(undefined);
+      expect(tracklableObject.userId).toEqual(undefined);
     });
 
     it('splits the URL back into its tracking components', () => {
       // URL: https://images.unsplash.com/photo-123?w=200?ixid=...
       // Options:
-      //   - app: 'my-app'
-      //   - page: 'search'
-      //   - label: 'dog'
-      //   - property: '5'
-      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwO3NlYXJjaDtkb2c7NTs=';
+      const app = 'my-app';
+      const page = 'search';
+      const label = 'dog';
+      const property = '5';
+      const userId = '6';
+      const encoded = base64.encode(`${app};${page};${label};${property};${userId}`);
+      const url = `https://images.unsplash.com/photo-123?w=200&ixid=${encoded}`;
 
       const tracklableObject = decode(url);
 
@@ -167,16 +198,19 @@ describe('imgix-trackable', function() {
       expect(tracklableObject.page).toEqual('search');
       expect(tracklableObject.label).toEqual('dog');
       expect(tracklableObject.property).toEqual('5');
+      expect(tracklableObject.userId).toEqual('6');
     });
 
     it('splits the URL back into its tracking components', () => {
       // URL: https://images.unsplash.com/photo-123?w=200&ixid=...&h=300
       // Options:
-      //   - app: 'my-app'
-      //   - page: ''
-      //   - label: ''
-      //   - property: ''
-      const url = 'https://images.unsplash.com/photo-123?w=200&ixid=bXktYXBwOzs7Ow==&h=300';
+      const app = 'my-app';
+      const page = '';
+      const label = '';
+      const property = '';
+      const userId = '';
+      const encoded = base64.encode(`${app};${page};${label};${property};${userId}`);
+      const url = `https://images.unsplash.com/photo-123?w=200&ixid=${encoded}&h=300`;
 
       const tracklableObject = decode(url);
 
@@ -185,6 +219,7 @@ describe('imgix-trackable', function() {
       expect(tracklableObject.page).toEqual(undefined);
       expect(tracklableObject.label).toEqual(undefined);
       expect(tracklableObject.property).toEqual(undefined);
+      expect(tracklableObject.userId).toEqual(undefined);
     });
 
     it('given a URL without a tracking param, it splits the URL back into its tracking components', () => {
@@ -197,6 +232,7 @@ describe('imgix-trackable', function() {
       expect(tracklableObject.page).toEqual(undefined);
       expect(tracklableObject.label).toEqual(undefined);
       expect(tracklableObject.property).toEqual(undefined);
+      expect(tracklableObject.userId).toEqual(undefined);
     });
   });
 });
